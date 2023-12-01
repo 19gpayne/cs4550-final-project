@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import * as client from "../client";
+import { capitalize } from "../utils";
 
 export default function Profile() {
     const [user, setUser] = useState();
@@ -41,10 +42,6 @@ export default function Profile() {
       }
       client.updateUser(updatedUser);
     }
-
-    const capitalize = (str) => {
-      return str.charAt(0).toUpperCase() + str.slice(1);
-    }
     return (
       <div className="container">
         {user && (
@@ -72,6 +69,7 @@ export default function Profile() {
             </div>
           </div>
         )}
+
       </div>
     );
 }

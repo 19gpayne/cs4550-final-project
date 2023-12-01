@@ -6,6 +6,7 @@ import Search from "./Search";
 import Login from "./Auth/login";
 import Signup from "./Auth/signup";
 import Nav from "./Navigation";
+import UserProfile from "./Profile/userProfile";
 function App() {
   return (
     <HashRouter>
@@ -16,6 +17,7 @@ function App() {
           <Route path="/home"       element={<Home />}/>
           <Route path="/search"     element={<Search />}/>
           <Route path="/profile"    element={<Profile />}/>
+          <Route path="/profile/:id"element={<UserProfile />}/>
           <Route path="/login"      element={<Login />}/>
           <Route path="/register"   element={<Signup />}/>
         </Routes>
