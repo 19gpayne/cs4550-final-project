@@ -8,7 +8,6 @@ export default function Home() {
     const isUserLoggedIn = true;
     return (
       <div className="container">
-        <Nav />
         <h1 className="mt-3">Bookworm Buddy</h1>
         <p className="lead">The #1 site for book reviews</p>
 

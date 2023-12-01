@@ -19,7 +19,7 @@ export default function ListItem(book) {
                 </div>
                 <div className="col-md-8 d-flex justify-content-between flex-column">
                     <div className="card-body">
-                        <h5 className="card-title">{details.title} by {details.author_name?.join(",")}</h5>
+                        <h5 className="card-title">{details.title} by {details.author_name[0] ?? "Unknown"}</h5>
                         <p className="card-text">Published {details.first_publish_year}</p>
                         <p>{details.ratings_average ? `${details.ratings_average.toFixed(2)} / 5 stars` : "No ratings yet"}</p>
                         {details.last_modified_i && 
@@ -27,7 +27,7 @@ export default function ListItem(book) {
                         }
                     </div>
                     <div className="d-flex justify-content-end m-3">
-                        <Link to={`/search/${details.key}`}><div className="float-end" role="button"><FaExternalLinkAlt /></div></Link>
+                        <Link to={`/search${details.key}`}><div className="float-end" role="button"><FaExternalLinkAlt /></div></Link>
                     </div>
                 </div>
             </div>

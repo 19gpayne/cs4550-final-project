@@ -1,6 +1,5 @@
-import Nav from "../Navigation";
 import {FaSearch} from 'react-icons/fa';
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import axios from "axios";
 import ListItem from "./listitem";
 
@@ -21,7 +20,6 @@ export default function Search() {
 
     return (
       <div className="container">
-        <Nav />
         <div className="input-group input-group-lg mt-4">
           <input 
             type="text" 
@@ -30,7 +28,7 @@ export default function Search() {
             value={searchValue} 
             onChange={(e) => setSearchValue(e.target.value)}
           />
-          <div class="input-group-append p-3 input-group-text" role="button" onClick={handleSearch}>
+          <div className="input-group-append p-3 input-group-text" role="button" onClick={handleSearch}>
             <FaSearch size="14" />
           </div>
         </div>

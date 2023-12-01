@@ -5,10 +5,12 @@ import Profile from "./Profile";
 import Search from "./Search";
 import Login from "./Auth/login";
 import Signup from "./Auth/signup";
+import Nav from "./Navigation";
 function App() {
   return (
     <HashRouter>
-      <div>
+      <div className="container">
+        <Nav />
         <Routes>
           <Route path="/"           element={<Navigate to="/home"/>}/>
           <Route path="/home"       element={<Home />}/>
@@ -16,7 +18,6 @@ function App() {
           <Route path="/profile"    element={<Profile />}/>
           <Route path="/login"      element={<Login />}/>
           <Route path="/register"   element={<Signup />}/>
-          <Route path="*"           element={<Navigate to="/home"/>}/>
         </Routes>
       </div>
     </HashRouter>

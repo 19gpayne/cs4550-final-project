@@ -1,15 +1,24 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import Nav from "../Navigation";
+import * as client from "../client";
 
 function Login() {
   const [credentials, setCredentials] = useState({ username: "", password: "" });
   const navigate = useNavigate();
   const [error, setError] = useState("");
 
+  const signin = async () => {
+    await client.signin(credentials)
+    .then((response) => {
+      navigate("/home");
+    })
+    .catch((err) => {
+      setError("Invalid credentials")
+    })
+  };
+
   return (
     <div className="container">
-        <Nav />
         <h1 className="mt-3">Login</h1>
         <form
             onSubmit={(e) => {
@@ -17,9 +26,8 @@ function Login() {
             if (credentials.username === "test" && credentials.password === "test") {
                 navigate("/home");
             } else {
-                setError("Invalid Credentials");
-            }
-            }}
+                signin();
+            }}}
         >
             <div className="mb-3">
                 <label htmlFor="username" className="form-label">

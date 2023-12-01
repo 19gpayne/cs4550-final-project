@@ -1,15 +1,30 @@
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import * as client from "../client";
 
 function Nav() {
   const { pathname } = useLocation();
   const navigate = useNavigate();
-  const [isUserLoggedIn, setIsUserLoggedIn] = useState(true);
+  const [isUserLoggedIn, setIsUserLoggedIn] = useState(false);
 
-  const logout = () => {
-    setIsUserLoggedIn(false);
+  const logout = async () => {
+    await client.signout();
     navigate("/login");
-  }
+  };
+
+    const fetchAccount = async () => {
+        const account = await client.account();
+        if (account) {
+            setIsUserLoggedIn(true);
+        } else {
+            setIsUserLoggedIn(false);
+        }
+    };
+
+  useEffect(() => {
+    fetchAccount();
+  }, [pathname]);
+
   return (
     <nav className="mt-2 d-flex">
         <div className="nav nav-tabs">

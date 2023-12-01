@@ -1,19 +1,25 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import Nav from "../Navigation";
+import * as client from "../client";
 
 function Signup() {
-  const [credentials, setCredentials] = useState({ username: "", email: "", first: "", last: "", password: "", confirm: "", role: "" });
+  const [credentials, setCredentials] = useState({ username: "", email: "", first_name: "", last_name: "", password: "", confirm: "", role: "" });
   const navigate = useNavigate();
   const [error, setError] = useState("");
+  const signup = async () => {
+    try {
+      await client.signup(credentials);
+      navigate("/home");
+    } catch (err) {
+      setError(err.response.data.message);
+    }
+  };
 
   return (
     <div className="container">
-        <Nav />
         <h1 className="mt-3">Register</h1>
         <form
             onSubmit={(e) => {
-                console.log(credentials)
             e.preventDefault();
             if (credentials.username === "" || credentials.email === "" || credentials.first === "" || credentials.last === "" || credentials.password === "" || credentials.confirm === "" || credentials.role === "") {
                 setError("Please fill out all fields");
@@ -49,7 +55,7 @@ function Signup() {
                     <input
                         value={credentials.first}
                         onChange={(e) => {
-                            setCredentials({ ...credentials, first: e.target.value });
+                            setCredentials({ ...credentials, first_name: e.target.value });
                         }}
                         type="text"
                         className="form-control"
@@ -63,7 +69,7 @@ function Signup() {
                     <input
                         value={credentials.last}
                         onChange={(e) => {
-                            setCredentials({ ...credentials, last: e.target.value });
+                            setCredentials({ ...credentials, last_name: e.target.value });
                         }}
                         type="text"
                         className="form-control"
@@ -88,7 +94,7 @@ function Signup() {
             </div>
             <div className="d-flex">
                 <div className="mb-3 w-50 me-4">
-                    <label htmlFor="first" className="form-label">
+                    <label htmlFor="password" className="form-label">
                         Password *
                     </label>
                     <input
@@ -98,11 +104,11 @@ function Signup() {
                         }}
                         type="password"
                         className="form-control"
-                        id="first"
+                        id="password"
                     />
                 </div>
                 <div className="mb-3 w-50">
-                    <label htmlFor="last" className="form-label">
+                    <label htmlFor="confirm" className="form-label">
                         Confirm Password *
                     </label>
                     <input
@@ -112,7 +118,7 @@ function Signup() {
                         }}
                         type="password"
                         className="form-control"
-                        id="last"
+                        id="confirm"
                     />
                 </div>
             </div>
@@ -123,9 +129,9 @@ function Signup() {
                 <div className="d-flex align-items-center">
                     <input 
                         type="radio" 
-                        id="reader" 
+                        id="READER" 
                         name="type" 
-                        value="reader" 
+                        value="READER" 
                         onChange={(e) => {
                             setCredentials({ ...credentials, role: e.target.value });
                         }} 
@@ -135,9 +141,9 @@ function Signup() {
                     </label>
                     <input 
                         type="radio" 
-                        id="professional" 
+                        id="PROFESSIONAL" 
                         name="type" 
-                        value="professional" 
+                        value="PROFESSIONAL" 
                         className="ms-4" 
                         onChange={(e) => {
                             setCredentials({ ...credentials, role: e.target.value });
@@ -149,9 +155,9 @@ function Signup() {
 
                     <input 
                         type="radio" 
-                        id="publisher" 
+                        id="PUBLISHER" 
                         name="type" 
-                        value="publisher" 
+                        value="PUBLISHER" 
                         className="ms-4" 
                         onChange={(e) => {
                             setCredentials({ ...credentials, role: e.target.value });
@@ -162,7 +168,7 @@ function Signup() {
                     </label>
                 </div>
             </div>
-            <button type="submit" className="btn btn-primary">
+            <button type="submit" className="btn btn-primary" onClick={signup}>
                 Signup
             </button>
             <br />
