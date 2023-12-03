@@ -7,6 +7,7 @@ import {Link} from 'react-router-dom';
 import Toast from '../../Components/Toast';
 import Tooltip from '../../Components/Tooltip';
 import NumberInput from '../../Components/Inputs/numberInput';
+import {getFormattedDate} from '../../utils';
 
 export default function Details() {
     const {id} = useParams();
@@ -17,7 +18,7 @@ export default function Details() {
     const [isFavorite, setIsFavorite] = useState(false);
     const [showToast, setShowToast] = useState(false);
     const [isReviewing, setIsReviewing] = useState(false);
-    const [review, setReview] = useState({})
+    const [review, setReview] = useState({rating: 1})
 
     const fetchAccount = async () => {
         const account = await client.account();
@@ -70,7 +71,7 @@ export default function Details() {
 
     const resetReview = () => {
         setIsReviewing(false);
-        setReview({});
+        setReview({rating: 1});
     }
 
     const saveReview = async () => {
@@ -178,8 +179,8 @@ export default function Details() {
                                             <div className="card mb-3">
                                                 <div className="card-body">
                                                     <div className="d-flex justify-content-between">
-                                                        <h6 className="card-subtitle mb-2 text-muted d-flex align-items-center"><Link to={`/profile/${review.userID}`}>@{review.username}</Link>&nbsp;gave this book {review.rating}/5<FaStar /></h6>
-                                                        <p className="card-text">{review.timestamp}</p>
+                                                        <h6 className="card-subtitle mb-2 text-muted d-flex align-items-center"><Link to={`/profile/${review.userID}`}>@{review.username}</Link>&nbsp;gave this book {review.rating ?? 1}/5<FaStar /></h6>
+                                                        <p className="card-text">{getFormattedDate(review.timestamp)}</p>
                                                     </div>
                                                     <h5 className="card-title">{review.title}</h5>
                                                     <p className="card-text">{review.review}</p>

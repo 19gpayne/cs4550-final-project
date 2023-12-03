@@ -1,6 +1,7 @@
 import { FaExternalLinkAlt } from "react-icons/fa"
 import {Link, useNavigate} from "react-router-dom"
 import * as client from "../client"
+import './index.css'
 
 export default function ListItem(book) {
     const coverImage = `http://covers.openlibrary.org/b/id/${book.cover_i}-M.jpg`
@@ -32,18 +33,18 @@ export default function ListItem(book) {
     }
 
     return (
-        <div className="col-5 card mb-3 p-0">
+        <div className="col-12 col-lg-5 card mb-3 p-0">
             <div className="row g-0 h-100">
-                <div className="col-md-4">
+                <div className="wd-hidden-image col-12 col-md-4">
                     {book.cover_i ?
-                        <img src={coverImage} className="img-fluid rounded-start h-100" alt={book.title} />
+                        <img src={coverImage} className="rounded-start h-100" alt={book.title} />
                         :
                         <div className="bg-secondary text-white p-3 rounded-start h-100">
                             No image yet
                         </div>
                     }
                 </div>
-                <div className="col-md-8 d-flex justify-content-between flex-column">
+                <div className="col-md-8 d-flex justify-content-between flex-column wd-body float-end">
                     <div className="card-body">
                         <h5 className="card-title">{book.title} by {book.author_name[0] ?? "Unknown"}</h5>
                         <p className="card-text">Published {book.first_publish_year}</p>

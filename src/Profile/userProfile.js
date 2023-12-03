@@ -18,10 +18,10 @@ export default function UserProfile() {
     }, []);
 
     return (
-      <div className="container">
+      <div>
         {user && (
           <div>
-            <h1 className="mt-3">{capitalize(user.first_name)}'s Profile</h1>
+            <h1 className="mt-3">@{user.username}</h1>
             <div className="card">
               <Favorites user={user} isUser={false} />
             </div>

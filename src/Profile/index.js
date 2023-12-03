@@ -56,7 +56,7 @@ export default function Profile() {
     }
 
     return (
-      <div className="container">
+      <div>
         {user && (
           <div>
             <h1 className="mt-3">{capitalize(user.first_name)}'s Profile</h1>

@@ -44,7 +44,7 @@ export default function Search() {
     }, [id])
 
     return (
-      <div className="container">
+      <div>
         <div className="input-group input-group-lg mt-4">
           <input 
             type="text" 
@@ -69,7 +69,7 @@ export default function Search() {
                   :
                   <>
                     <p className="lead">Showing results for "{decodeURIComponent(id).replace(/\+/g, ' ')}"</p>
-                    <div className="row gap-5 m-auto justify-content-center">
+                    <div className="row gap-3 m-auto justify-content-center">
                       {searchResults.map((book) => (
                         <ListItem key={book.key} {...book} />
                       ))}

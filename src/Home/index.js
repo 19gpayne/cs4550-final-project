@@ -70,14 +70,14 @@ export default function Home() {
     }, []);
 
     return (
-      <div className="container">
+      <div>
         <h1 className="mt-3">Bookworm Buddy</h1>
         <p className="lead">The #1 site for book reviews</p>
 
         {isUserLoggedIn && (
             <>
                 <h3>Books for You</h3>
-                <div className="row gap-5 m-auto justify-content-center">
+                <div className="row gap-3 m-auto justify-content-center">
                     {booksForYou.length === 0 && <Spinner />}
                     {booksForYou.map((book) => {
                         return <ListItem key={book.title} {...book} />;
@@ -87,36 +87,36 @@ export default function Home() {
             </>
         )}
         <h3>Top Rated Books</h3>
-        <h4 className="my-4 ms-5">Fantasy</h4>
-        <div className="row gap-5 m-auto justify-content-center">
+        <h4 className="my-4 ">Fantasy</h4>
+        <div className="row gap-3 m-auto justify-content-center">
             {fantasyBooks.length === 0 && <Spinner />}
             {fantasyBooks.map((book) => {
                 return <ListItem key={book.title} {...book} />;
             })}
         </div>
-        <h4 className="my-4 ms-5">Non-Fiction</h4>
-        <div className="row gap-5 m-auto justify-content-center">
+        <h4 className="my-4 ">Non-Fiction</h4>
+        <div className="row gap-3 m-auto justify-content-center">
             {nonFictionBooks.length === 0 && <Spinner />}
             {nonFictionBooks.map((book) => {
                 return <ListItem key={book.title} {...book} />;
             })}
         </div>
-        <h4 className="my-4 ms-5">Mystery</h4>
-        <div className="row gap-5 m-auto justify-content-center">
+        <h4 className="my-4 ">Mystery</h4>
+        <div className="row gap-3 m-auto justify-content-center">
             {mysteryBooks.length === 0 && <Spinner />}
             {mysteryBooks.map((book) => {
                 return <ListItem key={book.title} {...book} />;
             })}
         </div>
-        <h4 className="my-4 ms-5">Romance</h4>
-        <div className="row gap-5 m-auto justify-content-center">
+        <h4 className="my-4 ">Romance</h4>
+        <div className="row gap-3 m-auto justify-content-center">
             {romanceBooks.length === 0 && <Spinner />}
             {romanceBooks.map((book) => {
                 return <ListItem key={book.title} {...book} />;
             })}
         </div>
-        <h4 className="my-4 ms-5">Horror</h4>
-        <div className="row gap-5 m-auto justify-content-center">
+        <h4 className="my-4 ">Horror</h4>
+        <div className="row gap-3 m-auto justify-content-center">
             {horrorBooks.length === 0 && <Spinner />}
             {horrorBooks.map((book) => {
                 return <ListItem key={book.title} {...book} />;
