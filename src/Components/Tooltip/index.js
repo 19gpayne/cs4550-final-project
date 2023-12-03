@@ -5,7 +5,6 @@ export default function Tooltip({ text, children }) {
   const [showTooltip, setShowTooltip] = useState(false);
 
   const handleMouseEnter = () => {
-    console.log("entering");
     setShowTooltip(true);
   };
 

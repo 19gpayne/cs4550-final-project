@@ -2,10 +2,11 @@ import React, {useState, useEffect} from 'react';
 import {useParams} from 'react-router-dom';
 import * as client from '../../client';
 import {useNavigate} from 'react-router-dom';
-import { FaAngleLeft, FaHeart, FaRegHeart, FaRegShareSquare } from 'react-icons/fa';
+import { FaAngleLeft, FaHeart, FaRegHeart, FaRegShareSquare, FaStar } from 'react-icons/fa';
 import {Link} from 'react-router-dom';
 import Toast from '../../Components/Toast';
 import Tooltip from '../../Components/Tooltip';
+import NumberInput from '../../Components/Inputs/numberInput';
 
 export default function Details() {
     const {id} = useParams();
@@ -15,7 +16,8 @@ export default function Details() {
     const [user, setUser] = useState();
     const [isFavorite, setIsFavorite] = useState(false);
     const [showToast, setShowToast] = useState(false);
-    const [review, setReview] = useState("")
+    const [isReviewing, setIsReviewing] = useState(false);
+    const [review, setReview] = useState({})
 
     const fetchAccount = async () => {
         const account = await client.account();
@@ -64,6 +66,28 @@ export default function Details() {
         setTimeout(() => {
             setShowToast(false);
           }, 5000);
+    }
+
+    const resetReview = () => {
+        setIsReviewing(false);
+        setReview({});
+    }
+
+    const saveReview = async () => {
+        const updatedBook = {
+            ...book,
+            reviews: [...book.reviews, 
+                {title: review.title, 
+                    review: review.review, 
+                    rating: review.rating, 
+                    userID: user._id, 
+                    username: user.username,
+                    timestamp: new Date().toISOString()
+                }]
+        }
+        await client.updateBook(updatedBook);
+        await fetchBook();
+        resetReview()
     }
 
     useEffect(() => {
@@ -120,25 +144,53 @@ export default function Details() {
                             <div className="d-flex justify-content-between align-items-center">
                                 <h3>Reviews</h3>
                                 {isUserLoggedIn ? 
-                                    <button className="btn btn-primary" disabled={!isUserLoggedIn}>+ Add Review</button>
+                                    <button className="btn btn-primary" disabled={!isUserLoggedIn} onClick={() => setIsReviewing(true)}>+ Add Review</button>
                                     :
                                     <Link to="/login">Login to add review</Link>
                                 } 
                             </div>
                             <hr />
-                            {book.reviews.length > 0 ? (
-                                book.reviews.map((review) => (
-                                    <div className="card mb-3">
-                                        <div className="card-body">
-                                            <h5 className="card-title">{review.title}</h5>
-                                            <h6 className="card-subtitle mb-2 text-muted">{review.author}</h6>
-                                            <p className="card-text">{review.body}</p>
+                            {isReviewing ? 
+                                (
+                                    <>
+                                        <h5>Add Review</h5>
+                                        <div className="mb-3">
+                                            <label htmlFor="title" className="form-label">Title</label>
+                                            <input type="text" className="form-control" id="title" value={review.title} onChange={(e) => setReview({...review, title: e.target.value})} />
                                         </div>
-                                    </div>
-                                ))
-                            ) : (
-                                <div>No reviews yet</div>
-                            )}
+                                        <div className="mb-3">
+                                            <label htmlFor="body" className="form-label">Body</label>
+                                            <textarea className="form-control" id="body" value={review.review} onChange={(e) => setReview({...review, review: e.target.value})} />
+                                        </div>
+                                        <div className="mb-3">
+                                            <NumberInput label="Rating / 5 *" value={review.rating ?? 1} setValue={(value) => setReview({...review, rating: value})} min={1} max={5} step={1} />
+                                        </div>
+                                        <div className="float-end d-flex mb-3">
+                                            <button className="btn btn-light border" onClick={resetReview}>Cancel</button>
+                                            <button className="btn btn-primary ms-2" onClick={saveReview}>Submit</button>
+                                        </div>
+                                    </>
+                                )
+                                :
+                                <>
+                                    {book.reviews.length > 0 ? (
+                                        book.reviews.map((review) => (
+                                            <div className="card mb-3">
+                                                <div className="card-body">
+                                                    <div className="d-flex justify-content-between">
+                                                        <h6 className="card-subtitle mb-2 text-muted d-flex align-items-center"><Link to={`/profile/${review.userID}`}>@{review.username}</Link>&nbsp;gave this book {review.rating}/5<FaStar /></h6>
+                                                        <p className="card-text">{review.timestamp}</p>
+                                                    </div>
+                                                    <h5 className="card-title">{review.title}</h5>
+                                                    <p className="card-text">{review.review}</p>
+                                                </div>
+                                            </div>
+                                        ))
+                                    ) : (
+                                        <div>No reviews yet</div>
+                                    )}
+                                </>
+                            }
                         </div>
                     </div>
                 </div>

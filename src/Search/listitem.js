@@ -1,30 +1,26 @@
 import { FaExternalLinkAlt } from "react-icons/fa"
 import {Link, useNavigate} from "react-router-dom"
-import axios from "axios"
 import * as client from "../client"
-import { useState } from "react"
 
 export default function ListItem(book) {
-    const details = book.book
-    const coverImage = `http://covers.openlibrary.org/b/id/${details.cover_i}-M.jpg`
+    const coverImage = `http://covers.openlibrary.org/b/id/${book.cover_i}-M.jpg`
     const navigate = useNavigate()
 
     const fetchBook = async () => {
-        const key = details.key.split("/")[2]
+        const key = book.edition_key[0]
         const fetchedBook = await client.findBookByKey(key);
         if (!fetchedBook) {
-            const book = {
+            const bookObj = {
                 key: key,
-                title: details.title,
-                pub_date: details.first_publish_year,
-                cover_image: details.cover_i ? coverImage : undefined,
-                author: details.author_name[0] ?? "Unknown",
-                avg_rating: details.ratings_average ?? undefined,
+                title: book.title,
+                pub_date: book.first_publish_year,
+                cover_image: book.cover_i ? coverImage : undefined,
+                author: book.author_name[0] ?? "Unknown",
+                avg_rating: book.ratings_average ?? undefined,
                 reviews: []
             }
-            await client.createBook(book)
+            await client.createBook(bookObj)
                 .then((res) => {
-                    console.log(res)
                     navigate(`/details/${key}`)
                 })
                 .catch((err) => {
@@ -39,8 +35,8 @@ export default function ListItem(book) {
         <div className="col-5 card mb-3 p-0">
             <div className="row g-0 h-100">
                 <div className="col-md-4">
-                    {details.cover_i ?
-                        <img src={coverImage} className="img-fluid rounded-start h-100" alt={details.title} />
+                    {book.cover_i ?
+                        <img src={coverImage} className="img-fluid rounded-start h-100" alt={book.title} />
                         :
                         <div className="bg-secondary text-white p-3 rounded-start h-100">
                             No image yet
@@ -49,11 +45,11 @@ export default function ListItem(book) {
                 </div>
                 <div className="col-md-8 d-flex justify-content-between flex-column">
                     <div className="card-body">
-                        <h5 className="card-title">{details.title} by {details.author_name[0] ?? "Unknown"}</h5>
-                        <p className="card-text">Published {details.first_publish_year}</p>
-                        <p>{details.ratings_average ? `${details.ratings_average.toFixed(2)} / 5 stars` : "No ratings yet"}</p>
-                        {details.last_modified_i && 
-                            <div>Last updated {new Date(details.last_modified_i * 1000).toLocaleDateString()}</div>
+                        <h5 className="card-title">{book.title} by {book.author_name[0] ?? "Unknown"}</h5>
+                        <p className="card-text">Published {book.first_publish_year}</p>
+                        <p>{book.ratings_average ? `${book.ratings_average.toFixed(2)} / 5 stars` : "No ratings yet"}</p>
+                        {book.last_modified_i && 
+                            <div>Last updated {new Date(book.last_modified_i * 1000).toLocaleDateString()}</div>
                         }
                     </div>
                     <div className="d-flex justify-content-end m-3">

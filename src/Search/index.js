@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import ListItem from "./listitem";
 import { useNavigate, useParams } from "react-router-dom";
+import Spinner from '../Components/Spinner';
 
 export default function Search() {
     const navigate = useNavigate();
@@ -64,13 +65,13 @@ export default function Search() {
               :
               <>
                 {searching ? 
-                  <p className="lead w-100 text-center">Searching...</p>
+                  <p className="lead w-100 text-center"><Spinner /></p>
                   :
                   <>
                     <p className="lead">Showing results for "{decodeURIComponent(id).replace(/\+/g, ' ')}"</p>
                     <div className="row gap-5 m-auto justify-content-center">
                       {searchResults.map((book) => (
-                        <ListItem key={book.key} book={book} />
+                        <ListItem key={book.key} {...book} />
                       ))}
                     </div>
                   </>

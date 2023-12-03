@@ -2,6 +2,7 @@ import axios from "axios";
 export const BASE_API = process.env.REACT_APP_BASE_API_URL || "http://localhost:4000";
 export const USERS_API = `${BASE_API}/api/users`;
 export const BOOKS_API = `${BASE_API}/api/books`;
+export const OPEN_LIBRARY_API = 'https://openlibrary.org/search.json'
 
 const request = axios.create({
   withCredentials: true,
@@ -90,3 +91,12 @@ export const removeFavorite = async (user, book) => {
   return response.data;
 }
 
+export const updateBook = async (book) => {
+  const response = await request.put(`${BOOKS_API}/${book._id}`, book);
+  return response.data;
+};
+
+export const queryOpenLibrary = async (query) => {
+  const response = await axios.get(`${OPEN_LIBRARY_API}?${query}`);
+  return response;
+}

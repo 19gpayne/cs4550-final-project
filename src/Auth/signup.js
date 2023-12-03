@@ -7,9 +7,16 @@ function Signup() {
   const navigate = useNavigate();
   const [error, setError] = useState("");
   const signup = async () => {
+    if (credentials.username === "" || credentials.email === "" || credentials.first === "" || credentials.last === "" || credentials.password === "" || credentials.confirm === "" || credentials.role === "") {
+        setError("Please fill out all fields");
+        return;
+    } else if (credentials.password !== credentials.confirm) {
+        setError("Passwords do not match");
+        return;
+    }
     try {
       await client.signup(credentials);
-      navigate("/home");
+      navigate("/profile");
     } catch (err) {
       setError(err.response.data.message);
     }
@@ -19,18 +26,7 @@ function Signup() {
     <div className="container">
         <h1 className="mt-3">Register</h1>
         <form
-            onSubmit={(e) => {
-            e.preventDefault();
-            if (credentials.username === "" || credentials.email === "" || credentials.first === "" || credentials.last === "" || credentials.password === "" || credentials.confirm === "" || credentials.role === "") {
-                setError("Please fill out all fields");
-            } else if (credentials.password !== credentials.confirm) {
-                setError("Passwords do not match");
-            } else if (credentials.username === "test" && credentials.password === "test") {
-                navigate("/home");
-            } else {
-                setError("Invalid Credentials");
-            }
-            }}
+            onSubmit={(e) => {e.preventDefault();}}
         >
             <div className="mb-3">
                 <label htmlFor="username" className="form-label">

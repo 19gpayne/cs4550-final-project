@@ -3,6 +3,7 @@ import * as client from "../client";
 import { capitalize } from "../utils";
 import { Link } from "react-router-dom";
 import { FaHeart } from "react-icons/fa";
+import Favorites from "./favorites";
 
 export default function Profile() {
     const [user, setUser] = useState();
@@ -45,12 +46,6 @@ export default function Profile() {
       client.updateUser(updatedUser);
     }
 
-    const getSmallerImage = (image) => {
-      if (image) {
-        return image.split("-M.jpg")[0] + "-S.jpg"
-      }
-    }
-
     const unfavorite = async (id) => {
       const updatedUser = {
           ...user,
@@ -67,11 +62,11 @@ export default function Profile() {
             <h1 className="mt-3">{capitalize(user.first_name)}'s Profile</h1>
             <div className="card mb-2">
               <div className="card-body">
-                <h6 className="d-flex align-items-center card-subtitle mb-3 text-muted">Username: <input className="form-control w-25 ms-3" type="text" value={username} onChange={(e) => setUsername(e.target.value)} /></h6>
-                <h6 className="d-flex align-items-center card-subtitle mb-3 text-muted">First Name: <input className="form-control w-25 ms-3" type="text" value={firstName} onChange={(e) => setFirstName(e.target.value)} /></h6>
-                <h6 className="d-flex align-items-center card-subtitle mb-3 text-muted">Last Name: <input className="form-control w-25 ms-3" type="text" value={lastName} onChange={(e) => setLastName(e.target.value)} /></h6>
-                <h6 className="d-flex align-items-center card-subtitle mb-3 text-muted">Email: <input className="form-control w-25 ms-3" type="text" value={email} onChange={(e) => setEmail(e.target.value)} /></h6>
-                <h6 className="d-flex align-items-center card-subtitle mb-3 text-muted">Password: <input className="form-control w-25 ms-3" type="password" value={password} onChange={(e) => setPassword(e.target.value)} /></h6>
+                <h6 className="card-subtitle mb-3 text-muted row"><div className="col-lg-7 col-md-8 col-12 d-flex align-items-center"><p className="text-nowrap mb-0">Username:</p> <input className="form-control ms-3" type="text" value={username} onChange={(e) => setUsername(e.target.value)} /></div></h6>
+                <h6 className="card-subtitle mb-3 text-muted row"><div className="col-lg-7 col-md-8 col-12 d-flex align-items-center"><p className="text-nowrap mb-0">First Name:</p> <input className="form-control ms-3" type="text" value={firstName} onChange={(e) => setFirstName(e.target.value)} /></div></h6>
+                <h6 className="card-subtitle mb-3 text-muted row"><div className="col-lg-7 col-md-8 col-12 d-flex align-items-center"><p className="text-nowrap mb-0">Last Name:</p> <input className="form-control ms-3" type="text" value={lastName} onChange={(e) => setLastName(e.target.value)} /></div></h6>
+                <h6 className="card-subtitle mb-3 text-muted row"><div className="col-lg-7 col-md-8 col-12 d-flex align-items-center"><p className="text-nowrap mb-0">Email:</p> <input className="form-control ms-3" type="text" value={email} onChange={(e) => setEmail(e.target.value)} /></div></h6>
+                <h6 className="card-subtitle mb-3 text-muted row"><div className="col-lg-7 col-md-8 col-12 d-flex align-items-center"><p className="text-nowrap mb-0">Password:</p> <input className="form-control ms-3" type="password" value={password} onChange={(e) => setPassword(e.target.value)} /></div></h6>
                 <div className="mt-3 float-end">
                   <button className="btn btn-light border me-2" onClick={resetUser}>Discard Changes</button>
                   <button className="btn btn-primary" onClick={saveChanges}>Save</button>
@@ -79,35 +74,16 @@ export default function Profile() {
                 
               </div>
             </div>
-
-            <div className="card">
-              <div className="card-body">
-                <h5 className="card-title">Your Favorites</h5>
-                <div className="card-text row">
-                  {user.favorites.length === 0 && (
-                    <>
-                      <p className="lead text-center mb-1">No books added to favorites yet</p>
-                      <Link to="/search" className="text-center">Search for books</Link>
-                    </>
-                  )}
-                  {user.favorites.map((book) => (
-                    <div className="mb-3 col-6 row d-flex mt-3 align-items-center">
-                      <div className={`${book.image ? "col-2" : "col-3"} pe-0 text-end`}>
-                        <img src={getSmallerImage(book.image)} className="img-fluid p-0" alt={"No image"} />
-                      </div>
-                      <div className="col-9 d-flex">
-                        <Link className="card-title" to={`/details/${book.key}`}>{book.title}</Link>
-                        <h6 className="card-subtitle mb-2 text-muted me-3">{book.author}</h6>
-                        <p className="card-text text-primary" role="button" onClick={() => unfavorite(book.key)}><FaHeart /></p>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
+            <Favorites user={user} isUser={true} unfavorite={unfavorite} />
           </div>
         )}
-
+        {!user && (
+          <div className="text-center mt-4">
+            <p className="lead">Please login or register to view your profile</p>
+            <Link to="/login" className="btn btn-primary">Login</Link>
+            <Link to="/register" className="btn btn-light border ms-2">Register</Link>
+          </div>
+        )}
       </div>
     );
 }
