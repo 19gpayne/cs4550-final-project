@@ -1,6 +1,7 @@
 import axios from "axios";
 export const BASE_API = process.env.REACT_APP_BASE_API_URL || "http://localhost:4000";
 export const USERS_API = `${BASE_API}/api/users`;
+export const BOOKS_API = `${BASE_API}/api/books`;
 
 const request = axios.create({
   withCredentials: true,
@@ -52,4 +53,40 @@ export const signout = async () => {
   const response = await request.post(`${USERS_API}/signout`);
   return response.data;
 };
+
+export const findBookByKey = async (key) => {
+  const response = await request.get(`${BOOKS_API}/${key}`);
+  return response.data;
+};
+
+export const findAllBooks = async () => {
+  const response = await request.get(`${BOOKS_API}`);
+  return response.data;
+};
+
+export const createBook = async (book) => {
+  const response = await request.post(`${BOOKS_API}`, book);
+  return response.data;
+};
+
+export const addReview = async (book, review) => {
+  const response = await request.put(`${BOOKS_API}/${book._id}/reviews`, review);
+  return response.data;
+}
+
+export const deleteBook = async (book) => {
+  const response = await request.delete(
+    `${BOOKS_API}/${book._id}`);
+  return response.data;
+};
+
+export const addFavorite = async (user, book) => {
+  const response = await request.put(`${USERS_API}/${user._id}/favorites`, book);
+  return response.data;
+}
+
+export const removeFavorite = async (user, book) => {
+  const response = await request.delete(`${USERS_API}/${user._id}/favorites`, book);
+  return response.data;
+}
 

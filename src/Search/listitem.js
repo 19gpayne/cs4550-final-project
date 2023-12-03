@@ -1,9 +1,39 @@
 import { FaExternalLinkAlt } from "react-icons/fa"
-import {Link} from "react-router-dom"
+import {Link, useNavigate} from "react-router-dom"
+import axios from "axios"
+import * as client from "../client"
+import { useState } from "react"
 
 export default function ListItem(book) {
     const details = book.book
     const coverImage = `http://covers.openlibrary.org/b/id/${details.cover_i}-M.jpg`
+    const navigate = useNavigate()
+
+    const fetchBook = async () => {
+        const key = details.key.split("/")[2]
+        const fetchedBook = await client.findBookByKey(key);
+        if (!fetchedBook) {
+            const book = {
+                key: key,
+                title: details.title,
+                pub_date: details.first_publish_year,
+                cover_image: details.cover_i ? coverImage : undefined,
+                author: details.author_name[0] ?? "Unknown",
+                avg_rating: details.ratings_average ?? undefined,
+                reviews: []
+            }
+            await client.createBook(book)
+                .then((res) => {
+                    console.log(res)
+                    navigate(`/details/${key}`)
+                })
+                .catch((err) => {
+                    console.log(err)
+                })
+        } else {
+            navigate(`/details/${key}`)
+        }
+    }
 
     return (
         <div className="col-5 card mb-3 p-0">
@@ -27,7 +57,7 @@ export default function ListItem(book) {
                         }
                     </div>
                     <div className="d-flex justify-content-end m-3">
-                        <Link to={`/search${details.key}`}><div className="float-end" role="button"><FaExternalLinkAlt /></div></Link>
+                        <Link onClick={fetchBook}><div className="float-end" role="button"><FaExternalLinkAlt /></div></Link>
                     </div>
                 </div>
             </div>
