@@ -20,19 +20,19 @@ export default function Home() {
             if (account.favorites?.length > 0) {
                 const recentFavorite = account.favorites[account.favorites.length - 1].key
                 const getBook = await client.queryOpenLibrary(`q=${recentFavorite}&language=eng&limit=1`)
-                console.log(getBook.data.docs[0])
                 if (getBook.data.docs[0].subject_key) {
                     const results = await client.queryOpenLibrary(`q=&language=eng&limit=4&subject=${getBook.data.docs[0].subject_key[1]}`)
                     setBooksForYou(results.data.docs)
                 } else if (getBook.data.docs[0].author_name) {
-                    const results = await client.queryOpenLibrary(`author=${getBook.data.docs[0].author_name[0]}&language=eng&limit=4`)
+                    const results = await client.queryOpenLibrary(`q=&author=${getBook.data.docs[0].author_name[0]}&language=eng&limit=4`)
                     setBooksForYou(results.data.docs)
                 } else {
-                    const results = await client.queryOpenLibrary(`author=${getBook.data.docs[0].title}&language=eng&limit=4`)
+                    const results = await client.queryOpenLibrary(`q=&author=${getBook.data.docs[0].title}&language=eng&limit=4`)
                     setBooksForYou(results.data.docs)
                 }
             } else {
-                const results = await client.queryOpenLibrary(`q=&language=eng&limit=4`)
+                const results = await client.queryOpenLibrary(`q=&language=eng&limit=4&subject=popular&sort=rating`)
+                console.log(results)
                 setBooksForYou(results.data.docs)
             }
         } else {
