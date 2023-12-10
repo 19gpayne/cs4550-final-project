@@ -26,8 +26,8 @@ function Nav() {
   }, [pathname]);
 
   return (
-    <nav className="mt-2 d-flex">
-        <div className="nav nav-tabs">
+    <nav className="row mt-2 d-flex justify-content-between">
+        <div className="nav nav-tabs col-md-10 w-auto">
         <Link to="/home"
             className={`nav-link ${pathname.includes("home") ? "active" : ""}`}>Home</Link>
         <Link to="/search"
@@ -35,7 +35,7 @@ function Nav() {
         <Link to="/profile"
             className={`nav-link ${pathname.includes("profile") ? "active" : ""}`}>Profile</Link>
         </div>
-        <div className="nav nav-tabs ms-auto">
+        <div className="nav nav-tabs ms-auto col-md-2 w-auto">
             {(!isUserLoggedIn || pathname.includes("login") || pathname.includes("register")) && (
                 <>
                     <Link to="/login"

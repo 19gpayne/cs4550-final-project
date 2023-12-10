@@ -49,6 +49,7 @@ export default function Company() {
         setTimeout(() => {
             setShowToast(false);
         }, 5000);
+        await fetchCompany()
     }
 
     return (
