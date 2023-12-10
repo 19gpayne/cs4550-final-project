@@ -70,26 +70,11 @@ export const createBook = async (book) => {
   return response.data;
 };
 
-export const addReview = async (book, review) => {
-  const response = await request.put(`${BOOKS_API}/${book._id}/reviews`, review);
-  return response.data;
-}
-
 export const deleteBook = async (book) => {
   const response = await request.delete(
     `${BOOKS_API}/${book._id}`);
   return response.data;
 };
-
-export const addFavorite = async (user, book) => {
-  const response = await request.put(`${USERS_API}/${user._id}/favorites`, book);
-  return response.data;
-}
-
-export const removeFavorite = async (user, book) => {
-  const response = await request.delete(`${USERS_API}/${user._id}/favorites`, book);
-  return response.data;
-}
 
 export const updateBook = async (book) => {
   const response = await request.put(`${BOOKS_API}/${book._id}`, book);

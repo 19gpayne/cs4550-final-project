@@ -2,7 +2,7 @@ import React, {useState, useEffect} from 'react';
 import {useParams} from 'react-router-dom';
 import * as client from '../../client';
 import {useNavigate} from 'react-router-dom';
-import { FaAngleLeft, FaHeart, FaRegHeart, FaRegShareSquare, FaStar } from 'react-icons/fa';
+import { FaAngleLeft, FaHeart, FaRegHeart, FaRegShareSquare, FaStar, FaPen } from 'react-icons/fa';
 import {Link} from 'react-router-dom';
 import Toast from '../../Components/Toast';
 import Tooltip from '../../Components/Tooltip';
@@ -18,6 +18,7 @@ export default function Details() {
     const [isFavorite, setIsFavorite] = useState(false);
     const [showToast, setShowToast] = useState(false);
     const [isReviewing, setIsReviewing] = useState(false);
+    const [userReviewed, setUserReviewed] = useState(false);
     const [review, setReview] = useState({rating: 1})
 
     const fetchAccount = async () => {
@@ -30,6 +31,11 @@ export default function Details() {
         setUser(account);
         if (account.favorites?.find((favorite) => favorite.key === id)) {
             setIsFavorite(true);
+        }
+        if (account.reviews?.find((review) => review.book_key === id)) {
+            setUserReviewed(true);
+            const review = account.reviews.find((review) => review.book_key === id);
+            setReview({title: review.review_title, review: review.review, rating: review.rating});
         }
       };
   
@@ -47,15 +53,13 @@ export default function Details() {
     
     const addFavorite = async () => {
         if (isFavorite) {
-            const response = 
             await client.updateUser({...user, 
-                favorites: user.favorites.filter((favorite) => favorite.key !== id)
+                favorites: user.favorites.filter((favorite) => favorite.book_key !== id)
             });
             setIsFavorite(false);
         } else {
-            const response = 
             await client.updateUser({...user, 
-                favorites: [...user.favorites, {key: id, title: book.title, image: book.cover_image}]
+                favorites: [...user.favorites, {book_key: id, book_title: book.title, book_image: book.cover_image}]
             });
             setIsFavorite(true);
         }
@@ -71,22 +75,46 @@ export default function Details() {
 
     const resetReview = () => {
         setIsReviewing(false);
-        setReview({rating: 1});
+        if (userReviewed) {
+            const review = user.reviews.find((review) => review.book_key === id);
+            setReview({title: review.review_title, review: review.review, rating: review.rating});
+        } else {
+            setReview({rating: 5});
+        }
     }
 
     const saveReview = async () => {
+        const time = new Date().toISOString();  
         const updatedBook = {
             ...book,
             reviews: [...book.reviews, 
-                {title: review.title, 
+                {
+                    title: review.title, 
                     review: review.review, 
                     rating: review.rating, 
                     userID: user._id, 
                     username: user.username,
-                    timestamp: new Date().toISOString()
+                    user_role: user.role,
+                    timestamp: time
                 }]
         }
         await client.updateBook(updatedBook);
+        const updatedUser = {
+            ...user,
+            reviews: [
+                ...user.reviews,
+                {
+                    book_key: book.key, 
+                    book_title: book.title,
+                    book_image: book.cover_image,
+                    timestamp: time,
+                    review_title: review.title, 
+                    review: review.review, 
+                    rating: review.rating, 
+                }
+            ]
+        }
+        await client.updateUser(updatedUser);
         await fetchBook();
         resetReview()
     }
@@ -136,7 +164,7 @@ export default function Details() {
                                     </Tooltip>
                                 }
                                 <div className="text-primary" role="button" id="toastbtn" onClick={share}><FaRegShareSquare size={21} /></div>
-                                <Toast showToast={showToast} setShowToast={setShowToast} />  
+                                <Toast showToast={showToast} setShowToast={setShowToast} message={"Link copied to clipboard!"} />  
                             </div>
                         </div>
                     </div>
@@ -145,7 +173,7 @@ export default function Details() {
                             <div className="d-flex justify-content-between align-items-center">
                                 <h3>Reviews</h3>
                                 {isUserLoggedIn ? 
-                                    <button className="btn btn-primary" disabled={!isUserLoggedIn} onClick={() => setIsReviewing(true)}>+ Add Review</button>
+                                    <button className="btn btn-primary" disabled={!isUserLoggedIn} onClick={() => setIsReviewing(true)}>{userReviewed ? "Edit Review" : "+ Add Review"}</button>
                                     :
                                     <Link to="/login">Login to add review</Link>
                                 } 
@@ -154,7 +182,7 @@ export default function Details() {
                             {isReviewing ? 
                                 (
                                     <>
-                                        <h5>Add Review</h5>
+                                        <h5>Write Review</h5>
                                         <div className="mb-3">
                                             <label htmlFor="title" className="form-label">Title</label>
                                             <input type="text" className="form-control" id="title" value={review.title} onChange={(e) => setReview({...review, title: e.target.value})} />
@@ -180,7 +208,9 @@ export default function Details() {
                                                 <div className="card-body">
                                                     <div className="d-flex justify-content-between">
                                                         <h6 className="card-subtitle mb-2 text-muted d-flex align-items-center"><Link to={`/profile/${review.userID}`}>@{review.username}</Link>&nbsp;gave this book {review.rating ?? 1}/5<FaStar /></h6>
-                                                        <p className="card-text">{getFormattedDate(review.timestamp)}</p>
+                                                        <p className="card-text align-items-center d-flex">
+                                                            {getFormattedDate(review.timestamp)} 
+                                                        </p>
                                                     </div>
                                                     <h5 className="card-title">{review.title}</h5>
                                                     <p className="card-text">{review.review}</p>

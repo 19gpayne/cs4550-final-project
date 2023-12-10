@@ -46,7 +46,7 @@ export default function ListItem(book) {
                 </div>
                 <div className="col-md-8 d-flex justify-content-between flex-column wd-body float-end">
                     <div className="card-body">
-                        <h5 className="card-title">{book.title} by {book.author_name[0] ?? "Unknown"}</h5>
+                        <h5 className="card-title">{book.title} by {book.author_name ? book.author_name[0] : "Unknown"}</h5>
                         <p className="card-text">Published {book.first_publish_year}</p>
                         <p>{book.ratings_average ? `${book.ratings_average.toFixed(2)} / 5 stars` : "No ratings yet"}</p>
                         {book.last_modified_i && 

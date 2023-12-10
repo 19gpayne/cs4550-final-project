@@ -77,7 +77,8 @@ export default function Home() {
         {isUserLoggedIn && (
             <>
                 <h3>Books for You</h3>
-                <div className="row gap-3 m-auto justify-content-center">
+                <hr />
+                <div className="mt-3 row gap-3 m-auto justify-content-center">
                     {booksForYou.length === 0 && <Spinner />}
                     {booksForYou.map((book) => {
                         return <ListItem key={book.title} {...book} />;
@@ -87,7 +88,8 @@ export default function Home() {
             </>
         )}
         <h3>Top Rated Books</h3>
-        <h4 className="my-4 ">Fantasy</h4>
+        <hr />
+        <h4 className="mt-3 mb-4 ">Fantasy</h4>
         <div className="row gap-3 m-auto justify-content-center">
             {fantasyBooks.length === 0 && <Spinner />}
             {fantasyBooks.map((book) => {

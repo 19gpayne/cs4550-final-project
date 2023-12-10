@@ -65,7 +65,7 @@ export default function Search() {
               :
               <>
                 {searching ? 
-                  <p className="lead w-100 text-center"><Spinner /></p>
+                  <div className="lead w-100 text-center"><Spinner /></div>
                   :
                   <>
                     <p className="lead">Showing results for "{decodeURIComponent(id).replace(/\+/g, ' ')}"</p>
