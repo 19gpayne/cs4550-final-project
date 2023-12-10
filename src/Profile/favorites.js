@@ -38,7 +38,7 @@ export default function Favorites({user, isUser, unfavorite}) {
                         </>
                     )}
                     {favoritesAndReviews.map((book) => (
-                        <div className="mb-3 col-12 col-md-6 row d-flex mt-3">
+                        <div className="mb-3 col-12 col-md-6 row d-flex mt-3" key={book._id}>
                             <div className={`${book.book_image ? "col-2" : "col-3"} pe-0 text-end`}>
                                 <img src={getSmallerImage(book.book_image)} className="img-fluid p-0 border-dark" alt={"No image"} />
                             </div>

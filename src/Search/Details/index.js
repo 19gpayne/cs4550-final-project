@@ -29,13 +29,13 @@ export default function Details() {
             setIsUserLoggedIn(false);
         }
         setUser(account);
-        if (account.favorites?.find((favorite) => favorite.key === id)) {
+        if (account.favorites?.find((favorite) => favorite.book_key === id)) {
             setIsFavorite(true);
         }
         if (account.reviews?.find((review) => review.book_key === id)) {
             setUserReviewed(true);
             const review = account.reviews.find((review) => review.book_key === id);
-            setReview({title: review.review_title, review: review.review, rating: review.rating});
+            setReview({review_title: review.review_title, review: review.review, rating: review.rating});
         }
       };
   
@@ -77,7 +77,7 @@ export default function Details() {
         setIsReviewing(false);
         if (userReviewed) {
             const review = user.reviews.find((review) => review.book_key === id);
-            setReview({title: review.review_title, review: review.review, rating: review.rating});
+            setReview({review_title: review.review_title, review: review.review, rating: review.rating});
         } else {
             setReview({rating: 5});
         }
@@ -89,7 +89,7 @@ export default function Details() {
             ...book,
             reviews: [...book.reviews, 
                 {
-                    title: review.title, 
+                    review_title: review.review_title, 
                     review: review.review, 
                     rating: review.rating, 
                     userID: user._id, 
@@ -108,7 +108,7 @@ export default function Details() {
                     book_title: book.title,
                     book_image: book.cover_image,
                     timestamp: time,
-                    review_title: review.title, 
+                    review_title: review.review_title, 
                     review: review.review, 
                     rating: review.rating, 
                 }
@@ -116,6 +116,7 @@ export default function Details() {
         }
         await client.updateUser(updatedUser);
         await fetchBook();
+        await fetchAccount()
         resetReview()
     }
 
@@ -135,7 +136,7 @@ export default function Details() {
             {book && (
                 <div>
                     <div className="row mt-5">
-                        <div className="col-3">
+                        <div className="col-md-3 col-4">
                             {book.cover_image ?
                                 <img src={book.cover_image} className="img-fluid h-100" alt={book.title} />
                                 :
@@ -150,7 +151,7 @@ export default function Details() {
                             <p>Published {book.pub_date}</p>
                             <p>{book.avg_rating ? `${parseFloat(book.avg_rating).toFixed(2)} / 5 stars` : "No ratings yet"}</p>
                         </div>
-                        <div className="col-1">
+                        <div className="col-md-1">
                             <div className="d-flex justify-content-center align-items-center gap-3">
                                 {isUserLoggedIn ?
                                     <div className="text-primary" role="button" onClick={addFavorite}>
@@ -185,7 +186,7 @@ export default function Details() {
                                         <h5>Write Review</h5>
                                         <div className="mb-3">
                                             <label htmlFor="title" className="form-label">Title</label>
-                                            <input type="text" className="form-control" id="title" value={review.title} onChange={(e) => setReview({...review, title: e.target.value})} />
+                                            <input type="text" className="form-control" id="title" value={review.review_title} onChange={(e) => setReview({...review, review_title: e.target.value})} />
                                         </div>
                                         <div className="mb-3">
                                             <label htmlFor="body" className="form-label">Body</label>
@@ -204,7 +205,7 @@ export default function Details() {
                                 <>
                                     {book.reviews.length > 0 ? (
                                         book.reviews.map((review) => (
-                                            <div className="card mb-3">
+                                            <div className="card mb-3" key={review._id}>
                                                 <div className="card-body">
                                                     <div className="d-flex justify-content-between">
                                                         <h6 className="card-subtitle mb-2 text-muted d-flex align-items-center"><Link to={`/profile/${review.userID}`}>@{review.username}</Link>&nbsp;gave this book {review.rating ?? 1}/5<FaStar /></h6>
@@ -212,7 +213,7 @@ export default function Details() {
                                                             {getFormattedDate(review.timestamp)} 
                                                         </p>
                                                     </div>
-                                                    <h5 className="card-title">{review.title}</h5>
+                                                    <h5 className="card-title">{review.review_title}</h5>
                                                     <p className="card-text">{review.review}</p>
                                                 </div>
                                             </div>

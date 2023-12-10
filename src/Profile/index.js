@@ -40,7 +40,7 @@ export default function Profile() {
       setRole(user.role);
     }
     
-    const saveChanges = () => {
+    const saveChanges = async () => {
       const updatedUser = {
         _id: user._id,
         username: username,
@@ -50,7 +50,7 @@ export default function Profile() {
         password: password,
         role: role,
       }
-      client.updateUser(updatedUser);
+      await client.updateUser(updatedUser);
       setShowToast(true);
       setTimeout(() => {
         setShowToast(false);
@@ -65,7 +65,7 @@ export default function Profile() {
     const unfavorite = async (id) => {
       const updatedUser = {
           ...user,
-          favorites: user.favorites.filter((favorite) => favorite.key !== id)
+          favorites: user.favorites.filter((favorite) => favorite.book_key !== id)
       }
       await client.updateUser(updatedUser);
       await fetchAccount()
