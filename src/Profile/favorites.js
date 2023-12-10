@@ -21,7 +21,6 @@ export default function Favorites({user, isUser, unfavorite}) {
     .sort((a, b) => {
         return a.book_title.localeCompare(b.book_title);
     })
-    console.log(favoritesAndReviews)
     const getSmallerImage = (image) => {
         if (image) {
           return image.split("-M.jpg")[0] + "-S.jpg"

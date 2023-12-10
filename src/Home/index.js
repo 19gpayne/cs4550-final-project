@@ -32,7 +32,6 @@ export default function Home() {
                 }
             } else {
                 const results = await client.queryOpenLibrary(`q=&language=eng&limit=4&subject=popular&sort=rating`)
-                console.log(results)
                 setBooksForYou(results.data.docs)
             }
         } else {

@@ -4,11 +4,11 @@ import axios from "axios";
 import ListItem from "./listitem";
 import { useNavigate, useParams } from "react-router-dom";
 import Spinner from '../Components/Spinner';
+import { queryOpenLibrary } from '../client';
 
 export default function Search() {
     const navigate = useNavigate();
     const { id } = useParams();
-    const API = 'https://openlibrary.org/search.json'
     const [searchValue, setSearchValue] = useState(id ?? "");
     const [searching, setSearching] = useState(false);
     const [searchResults, setSearchResults] = useState([]);
@@ -29,7 +29,7 @@ export default function Search() {
         return
       }
       setSearching(true)
-      const results = await axios.get(`${API}?q=${id}&language=eng&limit=20`)
+      const results = await queryOpenLibrary(`q=${id}&language=eng&limit=20`)
       setSearchResults(results.data.docs)
       setSearching(false)
     }

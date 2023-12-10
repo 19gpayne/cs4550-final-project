@@ -15,7 +15,11 @@ function Signup() {
         return;
     }
     try {
-      await client.signup(credentials);
+        if (credentials.role === "PUBLISHER") {
+            await client.signup({...credentials, company: null});
+        } else {
+            await client.signup(credentials);
+        }
       navigate("/profile");
     } catch (err) {
       setError(err.response.data.message);

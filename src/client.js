@@ -2,6 +2,7 @@ import axios from "axios";
 export const BASE_API = process.env.REACT_APP_BASE_API_URL || "http://localhost:4000";
 export const USERS_API = `${BASE_API}/api/users`;
 export const BOOKS_API = `${BASE_API}/api/books`;
+export const COMPANIES_API = `${BASE_API}/api/companies`;
 export const OPEN_LIBRARY_API = 'https://openlibrary.org/search.json'
 
 const request = axios.create({
@@ -84,4 +85,30 @@ export const updateBook = async (book) => {
 export const queryOpenLibrary = async (query) => {
   const response = await axios.get(`${OPEN_LIBRARY_API}?${query}`);
   return response;
+}
+
+export const addCompany = async (company) => {
+  const response = await request.post(`${COMPANIES_API}`, company);
+  return response.data;
+}
+
+export const updateCompany = async (company) => {
+  const response = await request.put(`${COMPANIES_API}/${company._id}`, company);
+  return response.data;
+}
+
+export const deleteCompany = async (company) => {
+  const response = await request.delete(
+    `${COMPANIES_API}/${company._id}`);
+  return response.data;
+}
+
+export const findAllCompanies = async () => {
+  const response = await request.get(`${COMPANIES_API}`);
+  return response.data;
+}
+
+export const findCompanyById = async (id) => {
+  const response = await request.get(`${COMPANIES_API}/${id}`);
+  return response.data;
 }

@@ -95,7 +95,7 @@ export default function Profile() {
                 <h5 className="card-title">Admin Permissions</h5>
                 <button className="btn btn-danger" onClick={deleteAccount}>Delete Account</button>
                 {role === "PUBLISHER" && (
-                  <div></div>
+                  <button className="ms-3 btn btn-primary" onClick={() => navigate("/company")}>My Company</button>
                 )}
               </div>
             </div>
