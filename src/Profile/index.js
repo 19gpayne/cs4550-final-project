@@ -103,11 +103,7 @@ export default function Profile() {
           </div>
         )}
         {!user && (
-          <div className="text-center mt-4">
-            <p className="lead">Please login or register to view your profile</p>
-            <Link to="/login" className="btn btn-primary">Login</Link>
-            <Link to="/register" className="btn btn-light border ms-2">Register</Link>
-          </div>
+          <Spinner />
         )}
       </div>
     );
