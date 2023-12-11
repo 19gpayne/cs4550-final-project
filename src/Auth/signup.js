@@ -20,7 +20,7 @@ function Signup() {
         } else {
             await client.signup(credentials);
         }
-      navigate("/profile");
+      navigate("/home");
     } catch (err) {
       setError(err.response.data.message);
     }

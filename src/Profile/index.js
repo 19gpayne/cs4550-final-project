@@ -58,7 +58,7 @@ export default function Profile() {
     }
 
     const deleteAccount = async () => {
-      await client.deleteUser(user._id);
+      await client.deleteUser(user);
       navigate("/login")
     }
 

@@ -2,7 +2,7 @@ import React, {useState, useEffect} from 'react';
 import {useParams} from 'react-router-dom';
 import * as client from '../../client';
 import {useNavigate} from 'react-router-dom';
-import { FaAngleLeft, FaHeart, FaRegHeart, FaRegShareSquare, FaStar, FaPen } from 'react-icons/fa';
+import { FaAngleLeft, FaHeart, FaRegHeart, FaRegShareSquare, FaStar, FaPen, FaTrash } from 'react-icons/fa';
 import {Link} from 'react-router-dom';
 import Toast from '../../Components/Toast';
 import Tooltip from '../../Components/Tooltip';
@@ -65,6 +65,22 @@ export default function Details() {
         }
     }
 
+    const deleteReview = async () => {
+        const updatedBook = {
+            ...book,
+            reviews: book.reviews.filter((review) => review.userID !== user._id)
+        }
+        await client.updateBook(updatedBook);
+        const updatedUser = {
+            ...user,
+            reviews: user.reviews.filter((review) => review.book_key !== id)
+        }
+        await client.updateUser(updatedUser);
+        await fetchBook();
+        await fetchAccount()
+        setUserReviewed(false);
+    }
+
     const share = async () => {
         navigator.clipboard.writeText(window.location.href);
         setShowToast(true)
@@ -85,39 +101,81 @@ export default function Details() {
 
     const saveReview = async () => {
         const time = new Date().toISOString();  
-        const updatedBook = {
-            ...book,
-            reviews: [...book.reviews, 
-                {
-                    review_title: review.review_title, 
-                    review: review.review, 
-                    rating: review.rating, 
-                    userID: user._id, 
-                    username: user.username,
-                    user_role: user.role,
-                    timestamp: time
-                }]
-        }
-        await client.updateBook(updatedBook);
-        const updatedUser = {
-            ...user,
-            reviews: [
-                ...user.reviews,
-                {
-                    book_key: book.key, 
-                    book_title: book.title,
-                    book_image: book.cover_image,
-                    timestamp: time,
-                    review_title: review.review_title, 
-                    review: review.review, 
-                    rating: review.rating, 
-                }
-            ]
+        let updatedUser;
+        let updatedBook;
+        if (userReviewed) {
+            updatedBook = {
+                ...book,
+                reviews: book.reviews.map((r) => {
+                    if (r.userID === user._id) {
+                        return {
+                            ...r,
+                            review_title: review.review_title, 
+                            review: review.review, 
+                            rating: review.rating, 
+                            timestamp: time
+                        }
+                    } else {
+                        return r;
+                    }
+                })
+            }
+            updatedUser = {
+                ...user,
+                reviews: user.reviews.map((r) => {
+                    if (r.book_key === id) {
+                        return {
+                            ...r,
+                            book_key: id, 
+                            book_title: book.title,
+                            book_image: book.cover_image,
+                            timestamp: time,
+                            review_title: review.review_title, 
+                            review: review.review, 
+                            rating: review.rating, 
+                        }
+                    } else {
+                        return r;
+                    }
+                })
+            }
+        } else {
+            updatedBook = {
+                ...book,
+                reviews: [...book.reviews, 
+                    {
+                        review_title: review.review_title, 
+                        review: review.review, 
+                        rating: review.rating, 
+                        userID: user._id, 
+                        username: user.username,
+                        user_role: user.role,
+                        timestamp: time
+                    }]
+            }
+            updatedUser = {
+                ...user,
+                reviews: [
+                    ...user.reviews,
+                    {
+                        book_key: id, 
+                        book_title: book.title,
+                        book_image: book.cover_image,
+                        timestamp: time,
+                        review_title: review.review_title, 
+                        review: review.review, 
+                        rating: review.rating, 
+                    }
+                ]
+            }
         }
         await client.updateUser(updatedUser);
-        await fetchBook();
+        await client.updateBook(updatedBook);
         await fetchAccount()
-        resetReview()
+        await fetchBook();
+        setUserReviewed(true);
+        setReview({review_title: review.review_title, review: review.review, rating: review.rating});
+        setIsReviewing(false);
     }
 
     useEffect(() => {
@@ -209,9 +267,12 @@ export default function Details() {
                                                 <div className="card-body">
                                                     <div className="d-flex justify-content-between">
                                                         <h6 className="card-subtitle mb-2 text-muted d-flex align-items-center"><Link to={`/profile/${review.userID}`}>@{review.username}</Link>&nbsp;gave this book {review.rating ?? 1}/5<FaStar /></h6>
-                                                        <p className="card-text align-items-center d-flex">
-                                                            {getFormattedDate(review.timestamp)} 
-                                                        </p>
+                                                        <div className="card-text align-items-center d-flex">
+                                                            <p className="m-0 mt-1">{getFormattedDate(review.timestamp)}</p>
+                                                            {user && user._id === review.userID && (
+                                                                <button className="btn btn-link" onClick={() => deleteReview()}><FaTrash /></button>
+                                                            )}
+                                                        </div>
                                                     </div>
                                                     <h5 className="card-title">{review.review_title}</h5>
                                                     <p className="card-text">{review.review}</p>

@@ -10,7 +10,7 @@ function Login() {
   const signin = async () => {
     await client.signin(credentials)
     .then((response) => {
-      navigate("/profile");
+      navigate("/home");
     })
     .catch((err) => {
       setError("Invalid credentials")
@@ -24,7 +24,7 @@ function Login() {
             onSubmit={(e) => {
             e.preventDefault();
             if (credentials.username === "test" && credentials.password === "test") {
-                navigate("/profile");
+                navigate("/home");
             } else {
                 signin();
             }}}

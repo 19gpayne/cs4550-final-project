@@ -39,7 +39,7 @@ export default function AllRoutes() {
       }
       if (!isUserLoggedIn) {
         return <Route path={path} element={<Navigate to="/login"/>} />;
-      } else if (role && role !== userRole) {
+      } else if (userRole !== null && role !== userRole) {
         return <Route path={path} element={<Navigate to="/home" />} />;
       } else {
         return <Route path={path} element={element} />;
@@ -52,7 +52,7 @@ export default function AllRoutes() {
           <Route path="/home"         element={<Home />}/>
           <Route path="/search/:id?"  element={<Search />}/>
           <Route path="/details/:id"  element={<Details />}/>
-          <Route path="/profile"      element={<Profile />}/>
+          {makeProtectedRoute("/profile", <Profile />, null)}
           <Route path="/profile/:id"  element={<UserProfile />}/>
           <Route path="/login"        element={<Login />}/>
           <Route path="/register"     element={<Signup />}/>

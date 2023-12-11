@@ -22,9 +22,7 @@ export default function UserProfile() {
         {user && (
           <div>
             <h1 className="mt-3">@{user.username}</h1>
-            <div className="card">
-              <Favorites user={user} isUser={false} />
-            </div>
+            <Favorites user={user} isUser={false} />
           </div>
         )}
       </div>
