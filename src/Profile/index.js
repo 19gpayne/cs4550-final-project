@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from "react";
 import * as client from "../client";
 import { capitalize } from "../utils";
-import { Link } from "react-router-dom";
 import Favorites from "./favorites";
 import Toast from "../Components/Toast";
 import  { useNavigate } from "react-router-dom";
+import Spinner from "../Components/Spinner";
 
 export default function Profile() {
     const navigate = useNavigate();
